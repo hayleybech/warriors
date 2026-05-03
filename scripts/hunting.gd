@@ -32,14 +32,24 @@ var PatrolSchedules: Dictionary[Patrol, Dictionary] = {
 
 var velocity: Vector2 = Vector2.ZERO
 
+enum Rank {Kit, Apprentice, Warrior, SeniorWarrior, MedicineCatApprentice, MedicineCat, Deputy, Leader, Elder}
+@export_group("Warrior Summary")
+@export var rank: Rank = Rank.Warrior
+@export var name_prefix: String
+@export var name_suffix: String
 const name_prefixes: Array[String] = ['White', 'Night', 'Rain', 'Birch', 'Cloud', 'Fern', 'Gorse', 'Moss', 'Reed', 'Willow', 'Apple', 'Dew', 'Ember', 'Feather', 'Gray', 'Hawk', 'Leaf', 'Lily', 'Red', 'Silver', 'Stone', 'Sun', 'Swift', 'Dark', 'Dawn', 'Fallow', 'Holly', 'Mist', 'Morning', 'Mud', 'Nettle', 'Owl', 'Petal', 'Rabbit', 'Robin', 'Snow', 'Sparrow', 'Splash', 'Storm', 'Thistle', 'Beech', 'Bracken', 'Bright', 'Cherry', 'Dusk', 'Fox', 'Hare', 'Honey', 'Lark', 'Mouse', 'Oak', 'Oat', 'Pine', 'Rowan', 'Smoke', 'Spider', 'Ash', 'Black', 'Brindle', 'Clover', 'Crow', 'Dapple', 'Deer', 'Eagle', 'Finch', 'Flame', 'Flower', 'Hazel', 'Ivy', 'Lightning', 'Lion', 'Little', 'Mint', 'Mole', 'Moth', 'Patch', 'Pebble', 'Prickle', 'Quail', 'Ripple', 'Running', 'Rush', 'Shade', 'Shrew', 'Snake', 'Spotted', 'Tangle', 'Thrush', 'Trout', 'Vole', 'Acorn', 'Adder', 'Amber', 'Bee', 'Beetle', 'Bird', 'Blossom', 'Bristle', 'Cedar', 'Cinder', 'Daisy', 'Dove', 'Dust', 'Echo', 'Fire', 'Fly', 'Frost', 'Grass', 'Hollow', 'Ice', 'Juniper', 'Lake', 'Lizard', 'Mallow', 'Maple', 'Marsh', 'Milk', 'Minnow', 'Pale', 'Perch', 'Pike', 'Plum', 'Poppy', 'Pounce', 'Raven', 'Sedge', 'Seed', 'Shell', 'Sky', 'Sorrel', 'Squirrel', 'Swallow', 'Tall', 'Tawny', 'Toad', 'Weasel', 'Alder', 'Ant', 'Aspen', 'Berry', 'Blizzard', 'Bloom', 'Blue', 'Boulder', 'Bramble', 'Breeze', 'Buzzard', 'Claw', 'Doe', 'Eel', 'Freckle', 'Frog', 'Golden', 'Goose', 'Green', 'Heather', 'Heron', 'Hop', 'Hound', 'Jagged', 'Jay', 'Kestrel', 'Kink', 'Larch', 'Leopard', 'Meadow', 'Mistle', 'Needle', 'One', 'Otter', 'Pigeon', 'Quick', 'Rock', 'Rose', 'Rubble', 'Rye', 'Sage', 'Sand', 'Scorch', 'Shadow', 'Shimmer', 'Slate', 'Sleek', 'Sloe', 'Small', 'Snail', 'Soft', 'Song', 'Speckle', 'Spike', 'Spire', 'Stag', 'Starling', 'Stem', 'Stoat', 'Sunny', 'Sweet', 'Talon', 'Thorn', 'Tiger', 'Tiny', 'Turtle', 'Twig', 'Vine', 'Violet', 'Wasp', 'Web', 'Wild', 'Wind', 'Wolf', 'Wood', 'Wren', 'Yellow', 'Arch', 'Badger', 'Bark', 'Bay', 'Bella', 'Big', 'Billy', 'Blaze', 'Bluebell', 'Bounce', 'Brave', 'Briar', 'Broken', 'Brook', 'Brown', 'Bubbling', 'Bug', 'Bumble', 'Chestnut', 'Chive', 'Cinnamon', 'Clear', 'Cone', 'Copper', 'Creek', 'Cricket', 'Crooked', 'Crouch', 'Curl', 'Curly', 'Cypress', 'Dandelion', 'Dangling', 'Dead', 'Down', 'Drizzle', 'Drift', 'Duck', 'Ebony', 'Elder', 'Fallen', 'Fawn', 'Fennel', 'Ferret', 'Fidget', 'Fin', 'Fir', 'Flail', 'Flash', 'Flax', 'Fleet', 'Flicker', 'Flint', 'Flip', 'Flutter', 'Fog', 'Fringe', 'Frond', 'Furze', 'Fuzzy', 'Gravel', 'Gull', 'Hail', 'Half', 'Harry', 'Harvey', 'Hatch', 'Haven', 'Hay', 'Heavy', 'Hill', 'Hoot', 'Hope', 'Jump', 'Kite', 'Lavender', 'Lichen', 'Light', 'Log', 'Long', 'Lost', 'Loud', 'Low', 'Lynx', 'Maggot', 'Marigold', 'Midge', 'Misty', 'Monkey', 'Moon', 'Mossy', 'Mottle', 'Mumble', 'Myrtle', 'Nectar', 'Newt', 'Nut', 'Odd', 'Olive', 'Parsley', 'Pear', 'Pink', 'Pod', 'Pool', 'Primrose', 'Puddle', 'Quiet', 'Ragged', 'Rat', 'Ridge', 'Riley', 'River', 'Rook', 'Root', 'Russet', 'Sandy', 'Sharp', 'Shattered', 'Sheep', 'Shining', 'Shivering', 'Short', 'Shred', 'Shy', 'Slight', 'Snap', 'Sneeze', 'Snip', 'Snook', 'Soot', 'Spark', 'Spot', 'Star', 'Stork', 'Stream', 'Strike', 'Stripe', 'Stumpy', 'Swamp', 'Swan', 'Tansy', 'Thrift', 'Thunder', 'Timber', 'Torn', 'Tulip', 'Tumble', 'Vixen', 'Wave', 'Weed', 'Wet', 'Whisker', 'Whisper', 'Whistle', 'Whorl', 'Wish', 'Woolly', 'Yarrow', 'Yew']
 const name_suffixes: Array[String] = ['tail', 'fur', 'pelt', 'claw', 'heart', 'whisker', 'foot', 'wing', 'nose', 'feather', 'cloud', 'flight', 'leaf', 'flower', 'leap', 'shine', 'tooth', 'storm', 'fall', 'step', 'stripe', 'berry', 'face', 'fang', 'song', 'ear', 'dawn', 'frost', 'mist', 'splash', 'spring', 'branch', 'eye', 'fire', 'light', 'pool', 'shade', 'sky', 'spots', 'stream', 'bird', 'breeze', 'eyes', 'fern', 'scar', 'tuft', 'water', 'belly', 'brook', 'dapple', 'mask', 'moon', 'petal', 'runner', 'sight', 'snow', 'stem', 'stone', 'talon', 'thorn', 'whisper', 'willow', 'wind', 'wish', 'bark', 'beam', 'bee', 'blaze', 'bloom', 'blossom', 'briar', 'bright', 'burr', 'burrow', 'bush', 'crawl', 'creek', 'dusk', 'dust', 'eater', 'fish', 'flake', 'flame', 'gorse', 'hawk', 'haze', 'ice', 'jaw', 'leg', 'minnow', 'mouse', 'muzzle', 'needle', 'pad', 'paws', 'peak', 'poppy', 'pounce', 'puddle', 'rose', 'ripple', 'scratch', 'seed', 'shell', 'skip', 'slip', 'snout', 'speck', 'speckle', 'spirit', 'spot', 'stalk', 'strike', 'swoop', 'teeth', 'thistle', 'throat', 'toe', 'watcher', 'whistle']
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	camp = get_node("/root/World/Camp")
-	name = name_prefixes.pick_random() + name_suffixes.pick_random()
+	
+	name_prefix = name_prefixes.pick_random()
+	name_suffix = name_suffixes.pick_random()
+	name = get_warrior_name(name_prefix, name_suffix, rank)
 	$NameLabel.text = name
+	
 	$PatrolIndicator.text = Patrol.find_key(patrol) + ' Patrol'
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -69,4 +79,11 @@ func _process(delta: float) -> void:
 			# Set as new target
 			$Target.global_position = new_location
 		
-		
+func get_warrior_name(prefix: String, suffix: String, rank: Rank) -> String:
+	if rank == Rank.Kit:
+		return name_prefix + 'kit'
+	if rank == Rank.Apprentice or rank == Rank.MedicineCatApprentice:
+		return name_prefix + 'paw'
+	if rank == Rank.Leader:
+		return name_prefix +'star'
+	return name_prefix + name_suffix

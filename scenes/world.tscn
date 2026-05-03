@@ -127,3 +127,10 @@ limit_smoothed = true
 script = ExtResource("5_036b0")
 zoom_speed = 0.5
 min_zoom = 2.0
+
+[node name="Paw 1" parent="." unique_id=636280148 instance=ExtResource("1_fj7yv")]
+z_index = 5
+position = Vector2(466, 326)
+patrol = 0
+rank = 1
+name_suffix = "paw"
