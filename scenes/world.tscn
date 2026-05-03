@@ -118,11 +118,11 @@ position = Vector2(355, 330)
 script = ExtResource("6_i7141")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=980174743]
-position = Vector2(573, 327)
-limit_left = -101
-limit_top = -100
-limit_right = 1300
-limit_bottom = 750
+position = Vector2(571, 327)
+limit_left = -1000
+limit_top = -600
+limit_right = 2300
+limit_bottom = 1400
 limit_smoothed = true
 script = ExtResource("5_036b0")
 zoom_speed = 0.5
