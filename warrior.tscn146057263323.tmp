@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://d3yjja0luop5t"]
+
+[ext_resource type="Script" uid="uid://b62b88xauusvs" path="res://hunting.gd" id="1_373gj"]
+[ext_resource type="PackedScene" uid="uid://edwibiu782vb" path="res://cat.tscn" id="2_pkbmn"]
+
+[node name="Warrior" type="Node2D" unique_id=1509962150]
+script = ExtResource("1_373gj")
+
+[node name="Cat" parent="." unique_id=813707397 instance=ExtResource("2_pkbmn")]
