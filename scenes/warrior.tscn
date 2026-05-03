@@ -1,37 +1,17 @@
 [gd_scene format=3 uid="uid://d3yjja0luop5t"]
 
-[ext_resource type="Script" uid="uid://b62b88xauusvs" path="res://hunting.gd" id="1_373gj"]
+[ext_resource type="Script" uid="uid://b62b88xauusvs" path="res://scripts/hunting.gd" id="1_373gj"]
 [ext_resource type="FontFile" uid="uid://cbchvo7kqywd3" path="res://assets/fonts/OpenSans-VariableFont_wdth,wght.ttf" id="3_7o7qx"]
-[ext_resource type="PackedScene" uid="uid://p7ryetux8sfn" path="res://target.tscn" id="4_7o7qx"]
+[ext_resource type="PackedScene" uid="uid://p7ryetux8sfn" path="res://scenes/target.tscn" id="4_7o7qx"]
 
 [sub_resource type="FontVariation" id="FontVariation_373gj"]
 base_font = ExtResource("3_7o7qx")
-variation_opentype = {
-2003072104: 100,
-2003265652: 600
-}
 
 [sub_resource type="LabelSettings" id="LabelSettings_7o7qx"]
 font = SubResource("FontVariation_373gj")
 font_size = 8
 outline_size = 1
 outline_color = Color(0, 0, 0, 1)
-
-[sub_resource type="GDScript" id="GDScript_xu1gf"]
-script/source = "@tool
-extends Label
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	#text = get_parent().name
-	pass
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
-	pass
-"
 
 [sub_resource type="FontVariation" id="FontVariation_xu1gf"]
 base_font = ExtResource("3_7o7qx")
@@ -94,7 +74,6 @@ grow_vertical = 2
 text = "Brambleclaw"
 label_settings = SubResource("LabelSettings_7o7qx")
 horizontal_alignment = 1
-script = SubResource("GDScript_xu1gf")
 
 [node name="PatrolIndicator" type="Label" parent="." unique_id=902991546]
 anchors_preset = 7
