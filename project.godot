@@ -23,6 +23,10 @@ TimeManager="*uid://dehagubduyt1d"
 
 gdscript/warnings/untyped_declaration=1
 
+[display]
+
+window/stretch/mode="canvas_items"
+
 [input]
 
 zoom_in={

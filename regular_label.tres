@@ -1,5 +1,15 @@
 [gd_resource type="LabelSettings" format=3 uid="uid://bfehm3pt6w6cr"]
 
+[ext_resource type="FontFile" uid="uid://cbchvo7kqywd3" path="res://assets/fonts/OpenSans-VariableFont_wdth,wght.ttf" id="1_ko0lj"]
+
+[sub_resource type="FontVariation" id="FontVariation_vonfp"]
+base_font = ExtResource("1_ko0lj")
+variation_opentype = {
+2003072104: 100,
+2003265652: 600
+}
+
 [resource]
+font = SubResource("FontVariation_vonfp")
 outline_size = 2
 outline_color = Color(0, 0, 0, 1)

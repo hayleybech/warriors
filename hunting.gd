@@ -13,6 +13,23 @@ extends Node2D
 @export var time_patrols_start: float = 0.21 # About 5 am
 @export var time_patrols_end: float = 0.79 # About 7 pm
 
+enum Patrol {Dawn, Hunting, Night}
+var PatrolSchedules: Dictionary[Patrol, Dictionary] = {
+	Patrol.Dawn: {
+		'start': TimeManager.dawn_patrol_start,
+		'end': TimeManager.dawn_patrol_end
+	},
+	Patrol.Hunting: {
+		'start': TimeManager.hunting_patrol_start,
+		'end': TimeManager.hunting_patrol_end,
+	},
+	Patrol.Night: {
+		'start': TimeManager.night_patrol_start,
+		'end': TimeManager.night_patrol_end
+	}
+}
+@export var patrol: Patrol = Patrol.Hunting
+
 var velocity: Vector2 = Vector2.ZERO
 
 const name_prefixes: Array[String] = ['White', 'Night', 'Rain', 'Birch', 'Cloud', 'Fern', 'Gorse', 'Moss', 'Reed', 'Willow', 'Apple', 'Dew', 'Ember', 'Feather', 'Gray', 'Hawk', 'Leaf', 'Lily', 'Red', 'Silver', 'Stone', 'Sun', 'Swift', 'Dark', 'Dawn', 'Fallow', 'Holly', 'Mist', 'Morning', 'Mud', 'Nettle', 'Owl', 'Petal', 'Rabbit', 'Robin', 'Snow', 'Sparrow', 'Splash', 'Storm', 'Thistle', 'Beech', 'Bracken', 'Bright', 'Cherry', 'Dusk', 'Fox', 'Hare', 'Honey', 'Lark', 'Mouse', 'Oak', 'Oat', 'Pine', 'Rowan', 'Smoke', 'Spider', 'Ash', 'Black', 'Brindle', 'Clover', 'Crow', 'Dapple', 'Deer', 'Eagle', 'Finch', 'Flame', 'Flower', 'Hazel', 'Ivy', 'Lightning', 'Lion', 'Little', 'Mint', 'Mole', 'Moth', 'Patch', 'Pebble', 'Prickle', 'Quail', 'Ripple', 'Running', 'Rush', 'Shade', 'Shrew', 'Snake', 'Spotted', 'Tangle', 'Thrush', 'Trout', 'Vole', 'Acorn', 'Adder', 'Amber', 'Bee', 'Beetle', 'Bird', 'Blossom', 'Bristle', 'Cedar', 'Cinder', 'Daisy', 'Dove', 'Dust', 'Echo', 'Fire', 'Fly', 'Frost', 'Grass', 'Hollow', 'Ice', 'Juniper', 'Lake', 'Lizard', 'Mallow', 'Maple', 'Marsh', 'Milk', 'Minnow', 'Pale', 'Perch', 'Pike', 'Plum', 'Poppy', 'Pounce', 'Raven', 'Sedge', 'Seed', 'Shell', 'Sky', 'Sorrel', 'Squirrel', 'Swallow', 'Tall', 'Tawny', 'Toad', 'Weasel', 'Alder', 'Ant', 'Aspen', 'Berry', 'Blizzard', 'Bloom', 'Blue', 'Boulder', 'Bramble', 'Breeze', 'Buzzard', 'Claw', 'Doe', 'Eel', 'Freckle', 'Frog', 'Golden', 'Goose', 'Green', 'Heather', 'Heron', 'Hop', 'Hound', 'Jagged', 'Jay', 'Kestrel', 'Kink', 'Larch', 'Leopard', 'Meadow', 'Mistle', 'Needle', 'One', 'Otter', 'Pigeon', 'Quick', 'Rock', 'Rose', 'Rubble', 'Rye', 'Sage', 'Sand', 'Scorch', 'Shadow', 'Shimmer', 'Slate', 'Sleek', 'Sloe', 'Small', 'Snail', 'Soft', 'Song', 'Speckle', 'Spike', 'Spire', 'Stag', 'Starling', 'Stem', 'Stoat', 'Sunny', 'Sweet', 'Talon', 'Thorn', 'Tiger', 'Tiny', 'Turtle', 'Twig', 'Vine', 'Violet', 'Wasp', 'Web', 'Wild', 'Wind', 'Wolf', 'Wood', 'Wren', 'Yellow', 'Arch', 'Badger', 'Bark', 'Bay', 'Bella', 'Big', 'Billy', 'Blaze', 'Bluebell', 'Bounce', 'Brave', 'Briar', 'Broken', 'Brook', 'Brown', 'Bubbling', 'Bug', 'Bumble', 'Chestnut', 'Chive', 'Cinnamon', 'Clear', 'Cone', 'Copper', 'Creek', 'Cricket', 'Crooked', 'Crouch', 'Curl', 'Curly', 'Cypress', 'Dandelion', 'Dangling', 'Dead', 'Down', 'Drizzle', 'Drift', 'Duck', 'Ebony', 'Elder', 'Fallen', 'Fawn', 'Fennel', 'Ferret', 'Fidget', 'Fin', 'Fir', 'Flail', 'Flash', 'Flax', 'Fleet', 'Flicker', 'Flint', 'Flip', 'Flutter', 'Fog', 'Fringe', 'Frond', 'Furze', 'Fuzzy', 'Gravel', 'Gull', 'Hail', 'Half', 'Harry', 'Harvey', 'Hatch', 'Haven', 'Hay', 'Heavy', 'Hill', 'Hoot', 'Hope', 'Jump', 'Kite', 'Lavender', 'Lichen', 'Light', 'Log', 'Long', 'Lost', 'Loud', 'Low', 'Lynx', 'Maggot', 'Marigold', 'Midge', 'Misty', 'Monkey', 'Moon', 'Mossy', 'Mottle', 'Mumble', 'Myrtle', 'Nectar', 'Newt', 'Nut', 'Odd', 'Olive', 'Parsley', 'Pear', 'Pink', 'Pod', 'Pool', 'Primrose', 'Puddle', 'Quiet', 'Ragged', 'Rat', 'Ridge', 'Riley', 'River', 'Rook', 'Root', 'Russet', 'Sandy', 'Sharp', 'Shattered', 'Sheep', 'Shining', 'Shivering', 'Short', 'Shred', 'Shy', 'Slight', 'Snap', 'Sneeze', 'Snip', 'Snook', 'Soot', 'Spark', 'Spot', 'Star', 'Stork', 'Stream', 'Strike', 'Stripe', 'Stumpy', 'Swamp', 'Swan', 'Tansy', 'Thrift', 'Thunder', 'Timber', 'Torn', 'Tulip', 'Tumble', 'Vixen', 'Wave', 'Weed', 'Wet', 'Whisker', 'Whisper', 'Whistle', 'Whorl', 'Wish', 'Woolly', 'Yarrow', 'Yew']
@@ -22,8 +39,8 @@ const name_suffixes: Array[String] = ['tail', 'fur', 'pelt', 'claw', 'heart', 'w
 func _ready() -> void:
 	camp = get_node("/root/World/Camp")
 	name = name_prefixes.pick_random() + name_suffixes.pick_random()
-	$Label.text = name
-
+	$NameLabel.text = name
+	$PatrolIndicator.text = Patrol.find_key(patrol) + ' Patrol'
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -43,7 +60,7 @@ func _process(delta: float) -> void:
 	else:
 		# We need a new target
 		# Go home if the patrolling day has ended
-		if not TimeManager.is_within_period(time_patrols_start, time_patrols_end):
+		if not TimeManager.is_within_period(PatrolSchedules[patrol]['start'], PatrolSchedules[patrol]['end']):
 			$Target.global_position = camp.global_position
 		else:
 			# Choose a random location within the territory
