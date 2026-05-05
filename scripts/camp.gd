@@ -2,10 +2,18 @@ extends Node2D
 
 @export var territory_radius: float = 200.00
 
+var clan_members: Array[Warrior]
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	TimeManager.day_began.connect(handle_new_day)
+	
+	# Store references to all clan members
+	for child in get_children():
+		if child is Warrior:
+			clan_members.append(child)
 
+	handle_new_day()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -21,3 +29,60 @@ func _draw() -> void:
 	const antialiased = true
 
 	draw_arc(center, territory_radius, start_angle, end_angle, point_count, color, width, antialiased)
+	
+func handle_new_day() -> void:
+	assign_patrols()
+
+# Patrol assignment happens at midnight
+# It doesn't need to be midnight, because patrolling logic supports going overnight
+# But patrol assignment should happen between patrols or at the end of a patrol,
+func assign_patrols() -> void:
+	print('Assigning Patrols...')
+	var patrol_leader_weightings: Dictionary[Warrior.Rank, int] = {
+		Warrior.Rank.Leader: 500,
+		Warrior.Rank.Deputy: 900,
+		Warrior.Rank.SeniorWarrior: 1000,
+		Warrior.Rank.Warrior: 700,
+		Warrior.Rank.Apprentice: 100,
+	}
+	
+	# Assign weightings
+	var warriors_can_patrol: Array[Warrior] = clan_members\
+		.filter(func(warrior: Warrior) -> bool: return patrol_leader_weightings.has(warrior.rank))
+	var weights: PackedFloat32Array = PackedFloat32Array(warriors_can_patrol\
+		.map(func(warrior: Warrior) -> int: return patrol_leader_weightings[warrior.rank])
+	)
+	
+	# Choose a leader for every patrol, using the weightings
+	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	var patrol_leaders: Array[Warrior]
+	for patrol: Warrior.Patrol in Warrior.Patrol.values():
+		var chosen_key: int = rng.rand_weighted(weights)
+		var leader: Warrior = warriors_can_patrol[chosen_key]
+		print('The '+ Warrior.Patrol.find_key(patrol) + ' patrol will be led by ' + leader.get_warrior_name())
+		
+		leader.patrol = patrol
+		leader.patrol_mode = Warrior.PatrolMode.Leader
+		
+		patrol_leaders.append(leader)
+		warriors_can_patrol.remove_at(chosen_key)
+		weights.remove_at(chosen_key)
+	
+	# Assign remaining warriors to patrols (large clans can give some members a break)
+	for leader: Warrior in patrol_leaders:
+		leader.patrol_mode = Warrior.PatrolMode.Leader
+		
+		if warriors_can_patrol.size() <= 0:
+			return
+	
+		# Assign 1 warrior to the patrol (a more realistic patrol would have multiple)
+		var chosen_key: int = randi() % warriors_can_patrol.size()
+		var warrior: Warrior = warriors_can_patrol[chosen_key]
+		
+		warrior.leader = leader
+		warrior.patrol = leader.patrol
+		warrior.patrol_mode = Warrior.PatrolMode.Follower
+		print(warrior.get_warrior_name() + ' will join the ' + Warrior.Patrol.find_key(warrior.patrol) + ' patrol.')
+		
+		warriors_can_patrol.remove_at(chosen_key)
+	return

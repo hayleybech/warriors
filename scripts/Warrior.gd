@@ -1,5 +1,7 @@
 extends Node2D
 
+class_name Warrior
+
 @export_group("Territory")
 @export var camp: Node2D
 @export var territory_radius: float = 200.0
@@ -14,6 +16,7 @@ extends Node2D
 @export var time_patrols_end: float = 0.79 # About 7 pm
 
 enum Patrol {Dawn, Hunting, Night}
+enum PatrolMode {Leader, Follower}
 var PatrolSchedules: Dictionary[Patrol, Dictionary] = {
 	Patrol.Dawn: {
 		'start': TimeManager.dawn_patrol_start,
@@ -28,7 +31,10 @@ var PatrolSchedules: Dictionary[Patrol, Dictionary] = {
 		'end': TimeManager.night_patrol_end
 	}
 }
+@export_group("Current Patrol")
+@export var leader: Warrior = self
 @export var patrol: Patrol = Patrol.Hunting
+@export var patrol_mode: PatrolMode = PatrolMode.Leader
 
 var velocity: Vector2 = Vector2.ZERO
 
@@ -47,39 +53,53 @@ func _ready() -> void:
 	
 	name_prefix = name_prefixes.pick_random()
 	name_suffix = name_suffixes.pick_random()
-	name = get_warrior_name(name_prefix, name_suffix, rank)
+	name = get_warrior_name()
 	$NameLabel.text = name
-	
-	$PatrolIndicator.text = Patrol.find_key(patrol) + ' Patrol'
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	$PatrolIndicator.text = Patrol.find_key(patrol) + ' Patrol'
+	
 	if global_position.distance_to($Target.global_position) > arrived_radius:
-		# 1. Calculate direction to target
-		var direction: Vector2 = ($Target.global_position - global_position).normalized()
-		
-		# 2. Add some random wandering/meandering
-		var wander: Vector2 = Vector2(randf_range(-1, 1), randf_range(-1, 1)) * wander_strength
-		var desired_velocity: Vector2 = (direction + wander).normalized() * speed
-		
-		# 3. Smoothly move toward the desired velocity
-		velocity = velocity.lerp(desired_velocity, 0.05)
-		
-		# 4. Apply movement
-		global_position += velocity * delta
+		move_toward_target(delta)
 	else:
-		# We need a new target
-		# Go home if the patrolling day has ended
-		if not TimeManager.is_within_period(PatrolSchedules[patrol]['start'], PatrolSchedules[patrol]['end']):
-			$Target.global_position = camp.global_position
+		if patrol_mode == PatrolMode.Leader:
+			choose_patrol_destination()
+			$PatrolIndicator.visible = true
+			$Target.visible = true
 		else:
-			# Choose a random location within the territory
-			var new_location: Vector2 = Vector2(randf_range(camp.global_position.x - territory_radius, camp.global_position.x + territory_radius), randf_range(camp.global_position.y - territory_radius, camp.global_position.y + territory_radius))
+			# We're follwing the leader!
+			$Target.global_position = leader.global_position
+			$Target.visible = false 
+			$PatrolIndicator.visible = false
 			
-			# Set as new target
-			$Target.global_position = new_location
+
+func move_toward_target(delta: float) -> void:
+	var direction: Vector2 = ($Target.global_position - global_position).normalized()
 		
-func get_warrior_name(prefix: String, suffix: String, rank: Rank) -> String:
+	# 2. Add some random wandering/meandering
+	var wander: Vector2 = Vector2(randf_range(-1, 1), randf_range(-1, 1)) * wander_strength
+	var desired_velocity: Vector2 = (direction + wander).normalized() * speed
+	
+	# 3. Smoothly move toward the desired velocity
+	velocity = velocity.lerp(desired_velocity, 0.05)
+	
+	# 4. Apply movement
+	global_position += velocity * delta
+	
+func choose_patrol_destination() -> void:
+	# We need a new target
+	# Go home if the patrolling day has ended
+	if not TimeManager.is_within_period(PatrolSchedules[patrol]['start'], PatrolSchedules[patrol]['end']):
+		$Target.global_position = camp.global_position
+	else:
+		# Choose a random location within the territory
+		var new_location: Vector2 = Vector2(randf_range(camp.global_position.x - territory_radius, camp.global_position.x + territory_radius), randf_range(camp.global_position.y - territory_radius, camp.global_position.y + territory_radius))
+		
+		# Set as new target
+		$Target.global_position = new_location
+		
+func get_warrior_name() -> String:
 	if rank == Rank.Kit:
 		return name_prefix + 'kit'
 	if rank == Rank.Apprentice or rank == Rank.MedicineCatApprentice:

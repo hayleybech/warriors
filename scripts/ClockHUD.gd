@@ -6,11 +6,13 @@ func _process(_delta: float) -> void:
 	
 	if(TimeManager.is_dawn_patrol()):
 		$Patrol.text = 'Dawn Patrol'
-	if(TimeManager.is_hunting_patrol()):
+	elif(TimeManager.is_hunting_patrol()):
 		$Patrol.text = 'Hunting Patrol'
-	if(TimeManager.is_night_patrol()):
+	elif(TimeManager.is_night_patrol()):
 		$Patrol.text = 'Night Patrol'
-
+	else:
+		$Patrol.text = 'Rest'
+		
 func perunit_to_time(perunit: float) -> String:
 	# A full day has 86,400 seconds
 	var total_seconds: float = perunit * 86400.0

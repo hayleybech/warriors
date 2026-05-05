@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d3yjja0luop5t"]
 
-[ext_resource type="Script" uid="uid://b62b88xauusvs" path="res://scripts/hunting.gd" id="1_373gj"]
+[ext_resource type="Script" uid="uid://b62b88xauusvs" path="res://scripts/Warrior.gd" id="1_373gj"]
 [ext_resource type="FontFile" uid="uid://cbchvo7kqywd3" path="res://assets/fonts/OpenSans-VariableFont_wdth,wght.ttf" id="3_7o7qx"]
 [ext_resource type="PackedScene" uid="uid://p7ryetux8sfn" path="res://scenes/target.tscn" id="4_7o7qx"]
 
@@ -46,6 +46,7 @@ func _process(_delta: float) -> void:
 script = ExtResource("1_373gj")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1645843301]
+visible = false
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -96,3 +97,11 @@ top_level = true
 z_index = 4
 position = Vector2(20, -12)
 script = SubResource("GDScript_3ffga")
+
+[node name="ReferenceRect" type="ReferenceRect" parent="." unique_id=1700768607]
+offset_left = -20.0
+offset_top = -12.0
+offset_right = 20.0
+offset_bottom = 13.0
+border_color = Color(0.9456127, 0.88081354, 0.8958269, 1)
+editor_only = false

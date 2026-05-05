@@ -55,3 +55,4 @@ text = "Location"
 label_settings = ExtResource("1_4281l")
 horizontal_alignment = 1
 script = SubResource("GDScript_ndh7n")
+metadata/_edit_use_anchors_ = true
