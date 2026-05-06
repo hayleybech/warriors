@@ -15,7 +15,7 @@ signal day_began
 @export var night_patrol_end: float = 0.96 # About 11 pm
 
 @export_group("Clock Settings")
-@export var day_length_sec: float = 40.0
+@export var day_length_sec: float = 60.0 * 5
 @export var start_time: float = 0.00
 
 # Start: 0.0, End 1.0

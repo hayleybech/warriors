@@ -1,6 +1,6 @@
-extends Node2D
+extends Location
 
-@export var territory_radius: float = 200.00
+@export var territory_radius: float = 500.00
 
 var clan_members: Array[Warrior]
 
@@ -25,10 +25,10 @@ func _draw() -> void:
 	const end_angle = TAU # TAU is 2 * PI (full circle)
 	const point_count = 64 # Increase for a smoother circle
 	const color = Color.RED
-	const width = 0.5 # Outline thickness
+	const thickness = 0.5 # Outline thickness
 	const antialiased = true
 
-	draw_arc(center, territory_radius, start_angle, end_angle, point_count, color, width, antialiased)
+	draw_arc(center, territory_radius, start_angle, end_angle, point_count, color, thickness, antialiased)
 	
 func handle_new_day() -> void:
 	assign_patrols()
@@ -56,12 +56,12 @@ func assign_patrols() -> void:
 	# Choose a leader for every patrol, using the weightings
 	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	var patrol_leaders: Array[Warrior]
-	for patrol: Warrior.Patrol in Warrior.Patrol.values():
+	for patrol: Warrior.Patrol in Warrior.Patrol.values().filter(func(patrol: Warrior.Patrol) -> bool: return patrol != Warrior.Patrol.None):
 		var chosen_key: int = rng.rand_weighted(weights)
 		var leader: Warrior = warriors_can_patrol[chosen_key]
 		print('The '+ Warrior.Patrol.find_key(patrol) + ' patrol will be led by ' + leader.get_warrior_name())
 		
-		leader.patrol = patrol
+		leader.scheduled_patrol = patrol
 		leader.patrol_mode = Warrior.PatrolMode.Leader
 		
 		patrol_leaders.append(leader)
@@ -80,9 +80,16 @@ func assign_patrols() -> void:
 		var warrior: Warrior = warriors_can_patrol[chosen_key]
 		
 		warrior.leader = leader
-		warrior.patrol = leader.patrol
+		warrior.scheduled_patrol = leader.scheduled_patrol
 		warrior.patrol_mode = Warrior.PatrolMode.Follower
-		print(warrior.get_warrior_name() + ' will join the ' + Warrior.Patrol.find_key(warrior.patrol) + ' patrol.')
+		print(warrior.get_warrior_name() + ' will join the ' + Warrior.Patrol.find_key(warrior.scheduled_patrol) + ' patrol.')
 		
 		warriors_can_patrol.remove_at(chosen_key)
+	
+	# Finally, any other warriors may rest
+	for warrior: Warrior in warriors_can_patrol:
+		warrior.leader = warrior
+		warrior.scheduled_patrol = Warrior.Patrol.None
+		print(warrior.get_warrior_name() + ' has the day off.')
+		
 	return
