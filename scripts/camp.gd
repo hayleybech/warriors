@@ -37,7 +37,8 @@ func handle_new_day() -> void:
 # It doesn't need to be midnight, because patrolling logic supports going overnight
 # But patrol assignment should happen between patrols or at the end of a patrol,
 func assign_patrols() -> void:
-	print('Assigning Patrols...')
+	EventManager.log_event.emit(EventManager.EventType.Patrol, 'Assigning Patrols')
+	
 	var patrol_leader_weightings: Dictionary[Warrior.Rank, int] = {
 		Warrior.Rank.Leader: 500,
 		Warrior.Rank.Deputy: 900,
@@ -59,7 +60,7 @@ func assign_patrols() -> void:
 	for patrol: Warrior.Patrol in Warrior.Patrol.values().filter(func(patrol: Warrior.Patrol) -> bool: return patrol != Warrior.Patrol.None):
 		var chosen_key: int = rng.rand_weighted(weights)
 		var leader: Warrior = warriors_can_patrol[chosen_key]
-		print('The '+ Warrior.Patrol.find_key(patrol) + ' patrol will be led by ' + leader.get_warrior_name())
+		EventManager.log_event.emit(EventManager.EventType.Patrol, 'The '+ Warrior.Patrol.find_key(patrol) + ' patrol will be led by ' + leader.get_warrior_name())
 		
 		leader.scheduled_patrol = patrol
 		leader.patrol_mode = Warrior.PatrolMode.Leader
@@ -82,7 +83,8 @@ func assign_patrols() -> void:
 		warrior.leader = leader
 		warrior.scheduled_patrol = leader.scheduled_patrol
 		warrior.patrol_mode = Warrior.PatrolMode.Follower
-		print(warrior.get_warrior_name() + ' will join the ' + Warrior.Patrol.find_key(warrior.scheduled_patrol) + ' patrol.')
+		
+		EventManager.log_event.emit(EventManager.EventType.Patrol, warrior.get_warrior_name() + ' will join the ' + Warrior.Patrol.find_key(warrior.scheduled_patrol) + ' patrol.')
 		
 		warriors_can_patrol.remove_at(chosen_key)
 	
@@ -90,6 +92,6 @@ func assign_patrols() -> void:
 	for warrior: Warrior in warriors_can_patrol:
 		warrior.leader = warrior
 		warrior.scheduled_patrol = Warrior.Patrol.None
-		print(warrior.get_warrior_name() + ' has the day off.')
+		EventManager.log_event.emit(EventManager.EventType.Patrol, warrior.get_warrior_name() + ' has the day off.')
 		
 	return

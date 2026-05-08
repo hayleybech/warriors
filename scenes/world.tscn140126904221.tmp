@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://biaikppcvata8" path="res://scripts/ClockHUD.gd" id="2_dwbse"]
 [ext_resource type="PackedScene" uid="uid://h0x1lpeu016m" path="res://scenes/location.tscn" id="2_tlwt5"]
 [ext_resource type="FontFile" uid="uid://cbchvo7kqywd3" path="res://assets/fonts/OpenSans-VariableFont_wdth,wght.ttf" id="3_4mrxx"]
-[ext_resource type="PackedScene" uid="uid://cun7482f4srsi" path="res://scenes/event_log.tscn" id="5_7r4gi"]
+[ext_resource type="Script" uid="uid://bcc8tft88maon" path="res://scenes/EventLog.gd" id="4_4mrxx"]
 [ext_resource type="Script" uid="uid://cnjeehi063xvk" path="res://scripts/camera.gd" id="5_036b0"]
 [ext_resource type="Script" uid="uid://ci6bbnvskxy4x" path="res://scripts/camp.gd" id="6_i7141"]
 
@@ -49,6 +49,9 @@ outline_color = Color(0, 0, 0, 1)
 shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.58431375)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i7141"]
+bg_color = Color(0.6, 0.6, 0.6, 0.3764706)
+
 [sub_resource type="Animation" id="Animation_dwbse"]
 length = 40.0
 tracks/0/type = "value"
@@ -91,10 +94,10 @@ _data = {
 script = ExtResource("1_036b0")
 
 [node name="Ground" type="ColorRect" parent="." unique_id=917757188]
-offset_left = -914.0
-offset_top = -543.0
-offset_right = 2302.4907
-offset_bottom = 1271.0
+offset_left = -943.0
+offset_top = -492.0
+offset_right = 2273.4907
+offset_bottom = 1322.0
 color = Color(0.6033333, 1, 0.32, 1)
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=216549533]
@@ -128,10 +131,21 @@ offset_bottom = 35.0
 text = "Dawn Patrol"
 label_settings = SubResource("LabelSettings_e3hyu")
 
-[node name="EventLog" parent="HUD" unique_id=747644249 instance=ExtResource("5_7r4gi")]
-offset_left = 1431.0
-offset_right = 1896.0
-scale = Vector2(1, 1.020741)
+[node name="EventLog" type="CanvasGroup" parent="HUD" unique_id=1942481300]
+script = ExtResource("4_4mrxx")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HUD/EventLog" unique_id=1151701138]
+offset_left = 1690.0
+offset_top = 647.0
+offset_right = 1872.0
+offset_bottom = 986.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_i7141")
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/EventLog/ScrollContainer" unique_id=876272313]
+layout_mode = 2
+alignment = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1595377136]
 libraries/ = SubResource("AnimationLibrary_gbfbk")

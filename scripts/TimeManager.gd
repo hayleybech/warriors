@@ -28,7 +28,7 @@ func _ready() -> void:
 	time_rate = 1.0 / day_length_sec
 	time = start_time
 	
-	print('Day ' + str(day) + ' began.')
+	EventManager.log_event.emit(EventManager.EventType.Calendar, 'Day ' + str(day) + ' began.')
 	#day_began.emit()
 
 
@@ -38,7 +38,7 @@ func _process(delta: float) -> void:
 	if time >= 1.0:
 			time = 0.0
 			day += 1
-			print('Day ' + str(day) + ' began.')
+			EventManager.log_event.emit(EventManager.EventType.Calendar, 'Day ' + str(day) + ' began.')
 			day_began.emit()
 			
 func is_dawn_patrol() -> bool:
@@ -56,3 +56,19 @@ static func is_time_within_period(needle: float, start: float, end: float) -> bo
 		return (start <= needle and needle <= end)
 	else:
 		return (needle >= start or needle <= end)
+		
+		
+func get_time_display() -> String:
+	# A full day has 86,400 seconds
+	var total_seconds: float = time * 86400.0
+
+	# Extract components using floor division and modulo
+	var hours: int = int(total_seconds / 3600)
+	var minutes: int = int(fmod(total_seconds, 3600) / 60)
+	#var seconds = int(fmod(total_seconds, 60))
+	
+	# Return as a formatted HH:MM:SS string
+	#return "%02d:%02d:%02d" % [hours, minutes, seconds]
+
+	# Return as a formatted HH:MM:SS string
+	return "%02d:%02d" % [hours, minutes]

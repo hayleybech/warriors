@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://cun7482f4srsi"]
+
+[ext_resource type="Script" uid="uid://bcc8tft88maon" path="res://scenes/EventLog.gd" id="1_6mfcb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i7141"]
+bg_color = Color(0.94, 0.94, 0.94, 0.79607844)
+
+[node name="ScrollContainer" type="ScrollContainer" unique_id=1097333254]
+offset_left = 1481.0
+offset_top = 647.0
+offset_right = 1872.0
+offset_bottom = 986.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_i7141")
+vertical_scroll_mode = 2
+scroll_hint_mode = 1
+tile_scroll_hint = true
+script = ExtResource("1_6mfcb")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1095555890]
+layout_mode = 2
+alignment = 2
+
+[node name="LogItem" parent="VBoxContainer" unique_id=618914896 instance_placeholder="res://scenes/log_item.tscn"]
+layout_mode = 2
+day = 2
+time = "0.5"
+content = "This is a test"

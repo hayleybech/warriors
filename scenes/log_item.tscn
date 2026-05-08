@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://cmaiamfivlpbq"]
+
+[ext_resource type="Script" uid="uid://yo5ng4wxuekj" path="res://scenes/EventLogItem.gd" id="1_0q73p"]
+[ext_resource type="FontFile" uid="uid://cbchvo7kqywd3" path="res://assets/fonts/OpenSans-VariableFont_wdth,wght.ttf" id="2_adoye"]
+
+[sub_resource type="FontVariation" id="FontVariation_fpxj8"]
+base_font = ExtResource("2_adoye")
+
+[sub_resource type="LabelSettings" id="LabelSettings_3gr3r"]
+font = SubResource("FontVariation_fpxj8")
+font_size = 12
+font_color = Color(0.41568628, 0.44705883, 0.50980395, 1)
+
+[sub_resource type="FontVariation" id="FontVariation_d5fer"]
+base_font = ExtResource("2_adoye")
+variation_opentype = {
+2003072104: 100,
+2003265652: 600
+}
+
+[sub_resource type="LabelSettings" id="LabelSettings_n4ja4"]
+font = SubResource("FontVariation_d5fer")
+font_size = 12
+font_color = Color(0.41568628, 0.44705883, 0.50980395, 1)
+
+[sub_resource type="FontVariation" id="FontVariation_w8o0l"]
+base_font = ExtResource("2_adoye")
+
+[sub_resource type="LabelSettings" id="LabelSettings_xqn0w"]
+font = SubResource("FontVariation_w8o0l")
+font_size = 12
+font_color = Color(0.41568628, 0.44705883, 0.50980395, 1)
+
+[node name="LogItem" type="HBoxContainer" unique_id=618914896]
+theme_override_constants/separation = 10
+script = ExtResource("1_0q73p")
+
+[node name="Time" type="Label" parent="." unique_id=712048792]
+layout_mode = 2
+text = "Day 2, 23:58"
+label_settings = SubResource("LabelSettings_3gr3r")
+
+[node name="Type" type="Label" parent="." unique_id=1414800579]
+layout_mode = 2
+text = "Patrols"
+label_settings = SubResource("LabelSettings_n4ja4")
+
+[node name="Contents" type="Label" parent="." unique_id=290986109]
+layout_mode = 2
+text = "The Dawn patrol will be led by Marshbright."
+label_settings = SubResource("LabelSettings_xqn0w")
