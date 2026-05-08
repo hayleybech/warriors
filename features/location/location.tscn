@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://h0x1lpeu016m"]
 
 [ext_resource type="LabelSettings" uid="uid://bfehm3pt6w6cr" path="res://regular_label.tres" id="1_4281l"]
-[ext_resource type="Script" uid="uid://70ry4crgffqw" path="res://scenes/location.gd" id="1_j6npq"]
+[ext_resource type="Script" uid="uid://70ry4crgffqw" path="res://features/location/location.gd" id="1_j6npq"]
 
 [sub_resource type="GDScript" id="GDScript_ndh7n"]
 script/source = "@tool

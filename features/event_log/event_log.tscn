@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cun7482f4srsi"]
 
-[ext_resource type="Script" uid="uid://bcc8tft88maon" path="res://scenes/EventLog.gd" id="1_6mfcb"]
+[ext_resource type="Script" uid="uid://bcc8tft88maon" path="res://features/event_log/EventLog.gd" id="1_6mfcb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i7141"]
 bg_color = Color(0.94, 0.94, 0.94, 0.79607844)
@@ -20,8 +20,5 @@ script = ExtResource("1_6mfcb")
 layout_mode = 2
 alignment = 2
 
-[node name="LogItem" parent="VBoxContainer" unique_id=618914896 instance_placeholder="res://scenes/log_item.tscn"]
+[node name="LogItem" parent="VBoxContainer" unique_id=618914896 instance_placeholder="res://features/event_log/log_item.tscn"]
 layout_mode = 2
-day = 2
-time = "0.5"
-content = "This is a test"

@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://d3yjja0luop5t"]
 
-[ext_resource type="Script" uid="uid://b62b88xauusvs" path="res://scripts/Warrior.gd" id="1_373gj"]
+[ext_resource type="Script" uid="uid://b62b88xauusvs" path="res://features/warrior/Warrior.gd" id="1_373gj"]
 [ext_resource type="FontFile" uid="uid://cbchvo7kqywd3" path="res://assets/fonts/OpenSans-VariableFont_wdth,wght.ttf" id="3_7o7qx"]
-[ext_resource type="PackedScene" uid="uid://p7ryetux8sfn" path="res://scenes/target.tscn" id="4_7o7qx"]
+[ext_resource type="PackedScene" uid="uid://p7ryetux8sfn" path="res://features/warrior/target.tscn" id="4_7o7qx"]
 
 [sub_resource type="FontVariation" id="FontVariation_373gj"]
 base_font = ExtResource("3_7o7qx")
